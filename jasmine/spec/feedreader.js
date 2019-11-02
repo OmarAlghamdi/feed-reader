@@ -32,7 +32,15 @@ $(function() {
          * and that the URL is not empty.
          */
         it('has non-empty url', () => {
-            const urls = allFeeds.filter(feed => feed.url !== null)
+            //source: Stack Overflow
+            const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+            
+            const urls = allFeeds.filter(feed => pattern.test(feed.url))
             expect(urls.length).toBe(allFeeds.length)
         })
 
@@ -92,8 +100,8 @@ $(function() {
          * a single .entry element within the .feed container.
          */
         it('has result', (done) => {
-            const children = $('.feed').children()
-            expect(children.length).not.toBe(0)
+            const entries = $('.feed .entry')
+            expect(entries.length).not.toBe(0)
             done()
         })
     })
@@ -101,18 +109,22 @@ $(function() {
 
     
     describe('New Feed Selection', () => {
+        let firstFeed, secondFeed
         beforeEach((done => {
             loadFeed(0, () => {
-                done()
+                firstFeed = $('.feed')
+                loadFeed(1, () => {
+                    secondFeed = $('.feed')
+                    done()
+                })
             })
         }))
         /* a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          */
         it('content changes', (done) => {
-            const before = $('body')
             done()
-            expect($('body')).not.toBe(before)
+            expect(firstFeed).not.toBe(secondFeed)
         })
     })
 
