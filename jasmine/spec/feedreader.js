@@ -27,46 +27,94 @@ $(function() {
         });
 
 
-        /* TODO: Write a test that loops through each feed
+        /* a test that loops through each feed
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
+        it('has non-empty url', () => {
+            const urls = allFeeds.filter(feed => feed.url !== null)
+            expect(urls.length).toBe(allFeeds.length)
+        })
 
 
-        /* TODO: Write a test that loops through each feed
+        /* a test that loops through each feed
          * in the allFeeds object and ensures it has a name defined
          * and that the name is not empty.
          */
+        it('has non-empty name', () => {
+            const names = allFeeds.filter(feed => feed.name !== null)
+            expect(names.length).toBe(allFeeds.length)
+        })
     });
 
 
-    /* TODO: Write a new test suite named "The menu" */
-
-        /* TODO: Write a test that ensures the menu element is
-         * hidden by default. You'll have to analyze the HTML and
-         * the CSS to determine how we're performing the
-         * hiding/showing of the menu element.
+    
+    describe('The menu', () => {
+        /* a test that ensures the menu element is
+         * hidden by default.
          */
-
-         /* TODO: Write a test that ensures the menu changes
-          * visibility when the menu icon is clicked. This test
-          * should have two expectations: does the menu display when
-          * clicked and does it hide when clicked again.
+        it('is hidden', () => {
+            const isHidden = $('body').attr('class').match('menu-hidden').length == 1
+            expect(isHidden).toBe(true)
+        })
+         /* a test that ensures the menu changes
+          * visibility when the menu icon is clicked.
           */
+                
+        it('changes', () => {
+            let isHidden = $('body').attr('class').match('menu-hidden').length == 1
+            const hidden = true, shown = false
+            if (isHidden) {
+                $('.icon-list').click(() => {
+                    expect(isHidden).toBe(shown)
+                })
+            } else {
+                $('.icon-list').click(() => {
+                    expect(isHidden).toBe(hidden)
+                })
+            }
+            
+        })
+    })
+        
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+        
 
-        /* TODO: Write a test that ensures when the loadFeed
+    
+    describe('Initial Entries', () => {
+        beforeEach((done) => {
+            loadFeed(0, () => {
+                done()
+            })
+        })
+        /* a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test will require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+        it('has result', (done) => {
+            const children = $('.feed').children()
+            expect(children.length).not.toBe(0)
+            done()
+        })
+    })
+        
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
-
-        /* TODO: Write a test that ensures when a new feed is loaded
+    
+    describe('New Feed Selection', () => {
+        beforeEach((done => {
+            loadFeed(0, () => {
+                done()
+            })
+        }))
+        /* a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
          */
+        it('content changes', (done) => {
+            const before = $('body')
+            done()
+            expect($('body')).not.toBe(before)
+        })
+    })
+
+        
 }());
